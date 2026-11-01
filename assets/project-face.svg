@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000">
+  <!-- Mock screen: Real-Time Face Recognition (webcam feed + labelled box + pipeline steps) -->
+  <defs>
+    <radialGradient id="cam" cx=".5" cy=".45" r=".6">
+      <stop offset="0" stop-color="#2a1a18"/><stop offset="1" stop-color="#0a0a0a"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="#0b0b0b"/>
+  <text x="90" y="100" fill="#f5f5f5" font-family="Arial Black, Arial, sans-serif" font-size="30" letter-spacing="3">FACE·ID</text>
+  <text x="1510" y="98" fill="#E10600" font-family="Arial, sans-serif" font-size="22" letter-spacing="4" text-anchor="end">● REC · OFFLINE</text>
+  <!-- webcam frame -->
+  <rect x="90" y="150" width="900" height="760" fill="url(#cam)" stroke="#262626" stroke-width="2"/>
+  <!-- simplified head & shoulders -->
+  <ellipse cx="540" cy="470" rx="120" ry="150" fill="#3a2a26"/>
+  <path d="M370 910 C 380 700, 460 650, 540 650 C 620 650, 700 700, 710 910 Z" fill="#2b2420"/>
+  <path d="M420 430 C 410 330, 470 290, 545 295 C 625 300, 670 350, 660 430 C 640 380, 600 360, 550 365 C 500 370, 450 390, 420 430 Z" fill="#111"/>
+  <!-- detection box with corner brackets -->
+  <g stroke="#E10600" stroke-width="6" fill="none">
+    <path d="M395 300 v-40 h40 M685 260 h40 v40 M725 610 v40 h-40 M435 650 h-40 v-40"/>
+  </g>
+  <rect x="395" y="200" width="250" height="50" fill="#E10600"/>
+  <text x="410" y="234" fill="#fff" font-family="Arial, sans-serif" font-size="24" letter-spacing="3">DHEERAJ · 96%</text>
+  <!-- scan line -->
+  <rect x="395" y="455" width="330" height="3" fill="#ff4d42" opacity=".8"/>
+  <!-- pipeline steps -->
+  <g font-family="Arial, sans-serif" letter-spacing="3">
+    <rect x="1040" y="150" width="470" height="170" fill="#121212" stroke="#262626" stroke-width="2"/>
+    <text x="1070" y="198" fill="#8a8a8a" font-size="20">01 · DETECT</text>
+    <text x="1070" y="260" fill="#f5f5f5" font-family="Impact, Arial Black, sans-serif" font-size="46">HAAR CASCADE</text>
+    <rect x="1040" y="345" width="470" height="170" fill="#121212" stroke="#262626" stroke-width="2"/>
+    <text x="1070" y="393" fill="#8a8a8a" font-size="20">02 · TRAIN</text>
+    <text x="1070" y="455" fill="#f5f5f5" font-family="Impact, Arial Black, sans-serif" font-size="46">LBPH · 80 IMAGES</text>
+    <rect x="1040" y="540" width="470" height="170" fill="#1a0201" stroke="#5a0200" stroke-width="2"/>
+    <text x="1070" y="588" fill="#ff8a7a" font-size="20">03 · RECOGNISE</text>
+    <text x="1070" y="650" fill="#f5f5f5" font-family="Impact, Arial Black, sans-serif" font-size="46">REAL-TIME LABEL</text>
+  </g>
+  <g fill="#2a2a2a">
+    <rect x="1040" y="740" width="105" height="105"/><rect x="1162" y="740" width="105" height="105"/>
+    <rect x="1284" y="740" width="105" height="105"/><rect x="1406" y="740" width="105" height="105" fill="#3a0a08"/>
+  </g>
+  <text x="1040" y="890" fill="#8a8a8a" font-family="Arial, sans-serif" font-size="18" letter-spacing="3">CAPTURED SAMPLES</text>
+</svg>

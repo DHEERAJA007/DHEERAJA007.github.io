@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000">
+  <!-- Mock screen: UPI Statement Insights (Streamlit-style dashboard) -->
+  <rect width="1600" height="1000" fill="#ECEAE6"/>
+  <!-- sidebar -->
+  <rect width="330" height="1000" fill="#111"/>
+  <text x="50" y="100" fill="#f5f5f5" font-family="Arial Black, Arial, sans-serif" font-size="30" letter-spacing="2">UPI·INSIGHTS</text>
+  <g font-family="Arial, sans-serif" font-size="20" letter-spacing="3">
+    <rect x="50" y="160" width="230" height="56" fill="#E10600"/><text x="70" y="196" fill="#fff">UPLOAD CSV</text>
+    <text x="50" y="270" fill="#8a8a8a">MONTH</text>
+    <rect x="50" y="285" width="230" height="50" fill="#1c1c1c" stroke="#333"/><text x="68" y="318" fill="#ddd">September</text>
+    <text x="50" y="385" fill="#8a8a8a">CATEGORY</text>
+    <rect x="50" y="400" width="230" height="50" fill="#1c1c1c" stroke="#333"/><text x="68" y="433" fill="#ddd">All</text>
+    <text x="50" y="900" fill="#8a8a8a">EXPORT PDF ↓</text>
+  </g>
+  <!-- KPIs -->
+  <g font-family="Arial, sans-serif" letter-spacing="3">
+    <rect x="390" y="70" width="350" height="150" fill="#fff"/><text x="420" y="115" fill="#777" font-size="20">TOTAL SPENT</text>
+    <text x="420" y="185" fill="#111" font-family="Impact, Arial Black, sans-serif" font-size="60">₹ 38,420</text>
+    <rect x="770" y="70" width="350" height="150" fill="#fff"/><text x="800" y="115" fill="#777" font-size="20">TRANSACTIONS</text>
+    <text x="800" y="185" fill="#111" font-family="Impact, Arial Black, sans-serif" font-size="60">164</text>
+    <rect x="1150" y="70" width="360" height="150" fill="#fff"/><text x="1180" y="115" fill="#777" font-size="20">VS LAST MONTH</text>
+    <text x="1180" y="185" fill="#E10600" font-family="Impact, Arial Black, sans-serif" font-size="60">−12%</text>
+  </g>
+  <!-- donut -->
+  <rect x="390" y="250" width="500" height="680" fill="#fff"/>
+  <text x="420" y="300" fill="#777" font-family="Arial, sans-serif" font-size="20" letter-spacing="3">BY CATEGORY</text>
+  <g transform="translate(640 560)" fill="none" stroke-width="70">
+    <circle r="160" stroke="#E10600" stroke-dasharray="402 1005"/>
+    <circle r="160" stroke="#111" stroke-dasharray="251 1005" stroke-dashoffset="-402"/>
+    <circle r="160" stroke="#7a0300" stroke-dasharray="201 1005" stroke-dashoffset="-653"/>
+    <circle r="160" stroke="#bbb" stroke-dasharray="151 1005" stroke-dashoffset="-854"/>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="20" fill="#333">
+    <rect x="430" y="800" width="18" height="18" fill="#E10600"/><text x="460" y="816">Food 40%</text>
+    <rect x="650" y="800" width="18" height="18" fill="#111"/><text x="680" y="816">Shopping 25%</text>
+    <rect x="430" y="850" width="18" height="18" fill="#7a0300"/><text x="460" y="866">Travel 20%</text>
+    <rect x="650" y="850" width="18" height="18" fill="#bbb"/><text x="680" y="866">Bills 15%</text>
+  </g>
+  <!-- monthly bars -->
+  <rect x="920" y="250" width="590" height="680" fill="#fff"/>
+  <text x="950" y="300" fill="#777" font-family="Arial, sans-serif" font-size="20" letter-spacing="3">MONTHLY TREND</text>
+  <line x1="950" y1="860" x2="1480" y2="860" stroke="#ddd" stroke-width="2"/>
+  <g fill="#d6d3cf">
+    <rect x="970" y="620" width="60" height="240"/><rect x="1055" y="560" width="60" height="300"/>
+    <rect x="1140" y="660" width="60" height="200"/><rect x="1225" y="500" width="60" height="360"/>
+    <rect x="1310" y="590" width="60" height="270"/>
+  </g>
+  <rect x="1395" y="430" width="60" height="430" fill="#E10600"/>
+</svg>

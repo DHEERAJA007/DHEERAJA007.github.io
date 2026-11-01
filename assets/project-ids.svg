@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000">
+  <!-- Mock screen: Intrusion Detection (traffic, ROC curve, confusion matrix) -->
+  <defs>
+    <radialGradient id="glow" cx=".25" cy=".35" r=".5">
+      <stop offset="0" stop-color="#E10600" stop-opacity=".3"/><stop offset="1" stop-color="#E10600" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="#0a0a0a"/>
+  <rect width="1600" height="1000" fill="url(#glow)"/>
+  <text x="90" y="110" fill="#f5f5f5" font-family="Arial Black, Arial, sans-serif" font-size="32" letter-spacing="3">NET·GUARD</text>
+  <text x="1510" y="108" fill="#666" font-family="Arial, sans-serif" font-size="22" letter-spacing="3" text-anchor="end">UNSW-NB15</text>
+  <g font-family="Arial Black, Arial, sans-serif" font-size="88" fill="#f5f5f5">
+    <text x="90" y="270">CATCH THE</text><text x="90" y="370" fill="#E10600">ATTACK</text><text x="90" y="470">IN THE NOISE.</text>
+  </g>
+  <!-- packet stream -->
+  <g font-family="Courier New, monospace" font-size="22">
+    <text x="92" y="560" fill="#666">src 10.0.4.12  → dst 172.16.0.3   tcp  NORMAL</text>
+    <text x="92" y="600" fill="#666">src 10.0.4.19  → dst 172.16.0.3   udp  NORMAL</text>
+    <text x="92" y="640" fill="#ff4d42">src 45.33.91.7 → dst 172.16.0.8   tcp  EXPLOIT  0.97</text>
+    <text x="92" y="680" fill="#666">src 10.0.4.12  → dst 172.16.0.5   tcp  NORMAL</text>
+    <text x="92" y="720" fill="#ff4d42">src 45.33.91.7 → dst 172.16.0.8   tcp  DoS      0.93</text>
+  </g>
+  <!-- ROC -->
+  <rect x="900" y="170" width="610" height="420" fill="#111" stroke="#252525" stroke-width="2"/>
+  <text x="930" y="212" fill="#8a8a8a" font-family="Arial, sans-serif" font-size="20" letter-spacing="3">ROC CURVE · AUC 0.96</text>
+  <line x1="950" y1="550" x2="1470" y2="240" stroke="#333" stroke-width="2" stroke-dasharray="8 8"/>
+  <path d="M950 550 C 960 330, 1040 260, 1470 240" fill="none" stroke="#E10600" stroke-width="5"/>
+  <path d="M950 550 C 975 380, 1080 300, 1470 245" fill="none" stroke="#666" stroke-width="3"/>
+  <g font-family="Arial, sans-serif" font-size="18" fill="#8a8a8a"><text x="1300" y="520">— Random Forest</text><text x="1300" y="548" fill="#666">— Logistic Reg.</text></g>
+  <!-- confusion matrix -->
+  <g font-family="Impact, Arial Black, sans-serif" font-size="48" text-anchor="middle">
+    <rect x="900" y="620" width="300" height="140" fill="#E10600"/><text x="1050" y="710" fill="#fff">9,412</text>
+    <rect x="1210" y="620" width="300" height="140" fill="#1a1a1a"/><text x="1360" y="710" fill="#bbb">388</text>
+    <rect x="900" y="770" width="300" height="140" fill="#1a1a1a"/><text x="1050" y="860" fill="#bbb">521</text>
+    <rect x="1210" y="770" width="300" height="140" fill="#7a0300"/><text x="1360" y="860" fill="#fff">8,679</text>
+  </g>
+  <text x="92" y="900" fill="#f5f5f5" font-family="Impact, Arial Black, sans-serif" font-size="96">~90%+</text>
+  <text x="96" y="940" fill="#8a8a8a" font-family="Arial, sans-serif" font-size="22" letter-spacing="5">DETECTION ACCURACY</text>
+</svg>

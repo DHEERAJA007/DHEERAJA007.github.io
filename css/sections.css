@@ -1,0 +1,1270 @@
+/* ==========================================================================
+   sections.css — layout and look of each section, in page order
+   ========================================================================== */
+
+
+/* ==========================================================================
+   INTRO LOADER — glass bubble + counter; a masked hole (--hole) opens inside
+   the bubble and grows until the page fills the screen (js/intro.js)
+   ========================================================================== */
+.intro { display: none; }
+.is-intro .intro {
+  --hole: 0px;
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(40% 40% at 50% 50%, rgba(225, 6, 0, 0.16), transparent 70%),
+    #060606;
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent var(--hole), #000 calc(var(--hole) + 1px));
+  mask: radial-gradient(circle at 50% 50%, transparent var(--hole), #000 calc(var(--hole) + 1px));
+}
+.intro__bubble {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(46vmin, 380px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  /* Glass bubble: faint fill, bright rim, coloured inner edges, red outer glow */
+  background: radial-gradient(circle at 50% 55%, rgba(255, 255, 255, 0.02) 0 55%, rgba(225, 6, 0, 0.10) 72%, rgba(255, 120, 100, 0.22) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 0 40px rgba(255, 60, 40, 0.35),
+    inset 18px -22px 60px rgba(140, 60, 255, 0.14),
+    inset -14px 16px 40px rgba(0, 200, 255, 0.10),
+    0 0 80px rgba(225, 6, 0, 0.35);
+}
+/* Specular highlight */
+.intro__bubble::before {
+  content: '';
+  position: absolute;
+  top: 11%; left: 18%;
+  width: 30%; height: 18%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0));
+  transform: rotate(-35deg);
+}
+/* Iridescent rim, slowly rotating */
+.intro__bubble::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  padding: 3px;
+  background: conic-gradient(from 0deg, rgba(225, 6, 0, 0.9), rgba(255, 140, 90, 0.5), rgba(160, 80, 255, 0.45), rgba(60, 200, 255, 0.35), rgba(225, 6, 0, 0.9));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  filter: blur(1px);
+}
+.intro__count {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 12vmin, 6rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.intro__label {
+  position: absolute;
+  left: 50%; bottom: 12vh;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+/* Tiny glowing bubbles drifting around the loader */
+.intro__mini {
+  position: absolute;
+  left: var(--x); top: var(--y);
+  width: var(--s); height: var(--s);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), rgba(255, 80, 60, 0.15) 45%, transparent 70%);
+  box-shadow: 0 0 14px rgba(225, 6, 0, 0.6);
+}
+
+
+/* ==========================================================================
+   GLOBAL CHROME — scroll progress, custom cursor, film grain
+   ========================================================================== */
+
+/* Scroll progress bar: JS sets scaleX(0..1) */
+.progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 2px;
+  z-index: 300;
+  pointer-events: none;
+}
+.progress__bar {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+/* Custom cursor: only shown when JS adds .has-cursor (fine pointer, not touch) */
+.cursor { display: none; }
+.has-cursor .cursor { display: block; }
+.has-cursor, .has-cursor a, .has-cursor button { cursor: none; }
+.cursor__dot, .cursor__ring {
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 400;
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s, background-color 0.3s, border-color 0.3s;
+  will-change: transform;
+}
+.cursor.is-visible .cursor__dot,
+.cursor.is-visible .cursor__ring { opacity: 1; }
+.cursor__dot {
+  width: 6px; height: 6px;
+  margin: -3px 0 0 -3px;
+  background: var(--accent);
+}
+.cursor__ring {
+  width: 38px; height: 38px;
+  margin: -19px 0 0 -19px;
+  border: 1px solid rgba(245, 245, 245, 0.45);
+}
+.cursor.is-hover .cursor__ring {
+  border-color: var(--accent);
+  background: rgba(225, 6, 0, 0.08);
+}
+
+/* Full-page 3D background (js/bg3d.js): fixed behind all content */
+.bg3d {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.5s var(--ease-out);
+}
+.bg3d.is-ready { opacity: 1; }
+main, .footer { position: relative; z-index: 1; }
+/* Sections tilting in 3D can project past the screen edges; clip that without
+   creating a scroll container (so the sticky top bar keeps working) */
+.page { overflow-x: clip; }
+
+/* Film grain: SVG fractal noise tiled over everything at very low opacity */
+.grain {
+  position: fixed;
+  inset: -100px;
+  z-index: 250;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+
+/* ==========================================================================
+   TOP BAR
+   ========================================================================== */
+/* Sticky: stays at the top; once the page scrolls, JS adds .is-stuck which
+   tightens the padding and adds a blurred translucent background. */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  padding: 18px max(var(--gutter), calc((100vw - var(--maxw)) / 2 + var(--gutter)));
+  border-bottom: 1px solid var(--line);
+  transition: padding 0.4s var(--ease-out), background-color 0.4s, border-color 0.4s;
+}
+.topbar.is-stuck {
+  padding-block: 10px;
+  background: rgba(10, 10, 10, 0.72);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  border-bottom-color: rgba(255, 255, 255, 0.07);
+}
+.topbar__right { display: flex; align-items: center; gap: 20px; }
+.topbar__nav a[aria-current='true'] { color: var(--text); }
+
+.topbar__brand {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.topbar__brand span:first-child { color: var(--accent-text); }
+.topbar__nav ul {
+  display: flex;
+  gap: clamp(12px, 2.6vw, 36px);
+  list-style: none;
+}
+.topbar__nav a {
+  position: relative;
+  display: inline-block;
+  padding: 10px 2px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--muted);
+  transition: color 0.3s;
+}
+.topbar__nav a:hover, .topbar__nav a:focus-visible { color: var(--text); }
+.topbar__status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.topbar__status .icon { width: 14px; height: 14px; color: var(--accent); }
+.topbar__pulse {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+}
+
+@media (max-width: 760px) {
+  .topbar__nav { order: 3; width: 100%; }
+  .topbar__nav ul { justify-content: space-between; }
+  .topbar__status { font-size: 0.62rem; letter-spacing: 0.1em; }
+  /* Once stuck on small screens, keep only the nav row to save height */
+  .topbar.is-stuck .topbar__brand, .topbar.is-stuck .topbar__right { display: none; }
+  .topbar.is-stuck .topbar__nav a { padding-block: 6px; }
+}
+@media (max-width: 480px) {
+  .topbar__status { display: none; }
+}
+
+
+/* ==========================================================================
+   HERO
+   Layers (back → front): fallback gradient, giant word, WebGL canvas, photo, text
+   ========================================================================== */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+}
+
+/* Static gradient — always present; the only background on mobile / low-end / reduced motion.
+   Translucent, so the fixed 3D bubble background (bg3d) glows through the hero too. */
+.hero__fallback {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(42% 46% at 52% 42%, rgba(225, 6, 0, 0.30), transparent 70%),
+    radial-gradient(30% 30% at 85% 80%, rgba(225, 6, 0, 0.12), transparent 70%),
+    radial-gradient(60% 50% at 10% 100%, rgba(122, 3, 0, 0.25), transparent 70%);
+}
+
+/* Giant name across the top. Each letter is a span so it can rise in one by one;
+   fitHeroWord() in interactions.js sets --word-size so the name fills the width
+   (and stacks the two words on narrow screens). Above the WebGL canvas, behind the photo. */
+.hero__bgword {
+  position: absolute;
+  top: clamp(12px, 2vw, 28px);
+  left: 0; right: 0;
+  z-index: 1;
+  padding-inline: var(--gutter);
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 0.86;
+  text-transform: uppercase;
+  user-select: none;
+  pointer-events: none;
+}
+.hero__word {
+  display: flex;
+  justify-content: center;
+  gap: 0 0.2em;
+  font-size: var(--word-size, min(12.5vw, 220px));
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+}
+.hero__word.is-stacked { flex-direction: column; align-items: center; }
+/* Each word is its own mask for the letter rise */
+.hero__wordpart { display: flex; overflow: hidden; padding-bottom: 0.04em; }
+.hero__letter {
+  display: inline-block;
+  background: linear-gradient(180deg, #E10600 0%, #B00500 45%, rgba(110, 3, 0, 0.35) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* "Hi, I'm" — handwritten, laid over the top-left of the name, in front of everything.
+   Lucida Handwriting ships with Windows; other systems fall back to a similar script. */
+.hero__hello {
+  position: absolute;
+  z-index: 4;
+  top: calc(clamp(12px, 2vw, 28px) - var(--word-size, 160px) * 0.1);
+  left: calc(var(--gutter) + 0.5%);
+  font-family: 'Lucida Handwriting', 'Lucida Calligraphy', 'Apple Chancery', var(--font-script);
+  font-size: max(1.4rem, calc(var(--word-size, 160px) * 0.22));
+  line-height: 1;
+  color: #fff;
+  rotate: -7deg;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+}
+
+.hero__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.6s var(--ease-out);
+}
+.hero__canvas.is-ready { opacity: 1; }
+
+/* Two columns: photo on the left, all the text on the right */
+.hero__inner {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas: 'photo content';
+  align-items: end;
+  gap: clamp(24px, 4vw, 64px);
+  max-width: var(--maxw);
+  min-height: max(680px, calc(100svh - 74px));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Cut-out photo (no background): its head overlaps the lower half of the name */
+.hero__photo {
+  grid-area: photo;
+  align-self: end;
+  justify-self: center;
+  width: min(100%, 560px);
+  margin-top: calc(var(--word-size, 160px) * 0.5);
+}
+.hero__photo img {
+  width: 100%;
+  -webkit-mask-image: linear-gradient(180deg, #000 80%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 80%, transparent 100%);
+  filter: drop-shadow(0 0 36px rgba(225, 6, 0, 0.3));
+}
+
+.hero__content {
+  grid-area: content;
+  position: relative;
+  z-index: 3;
+  align-self: end;
+  max-width: 580px;
+  padding-top: calc(var(--word-size, 160px) * 0.95 + 24px);
+  padding-bottom: clamp(32px, 5vw, 64px);
+}
+.hero__role {
+  font-size: clamp(1.15rem, 1.9vw, 1.6rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+.hero__about p {
+  margin-top: 14px;
+  max-width: 54ch;
+  font-size: 0.95rem;
+  color: #bdbdbd;
+}
+.hero__about p:first-child { color: #e2e2e2; }
+.hero__loc {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.hero__loc .icon { color: var(--accent); }
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 36px;
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line-strong);
+  list-style: none;
+}
+.stat { display: flex; align-items: center; gap: 12px; }
+.stat__num {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.2vw, 2.8rem);
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.stat__label {
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1.6;
+  text-transform: uppercase;
+  color: #cfcfcf;
+}
+
+/* Hero — phones: name stacked on two lines, photo, then text */
+@media (max-width: 760px) {
+  .hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'photo' 'content';
+    gap: 0;
+    min-height: 0;
+  }
+  .hero__photo { width: min(88%, 400px); margin-top: calc(var(--word-size, 90px) * 1.2); }
+  .hero__content { padding-top: 0; margin-top: -2%; }
+  .stats { justify-content: space-between; gap: 8px 12px; }
+  .stat { flex-direction: column; align-items: flex-start; gap: 6px; }
+}
+
+
+/* ==========================================================================
+   SELECTED PROJECTS — 3D tilt glass cards, 3 per row on laptops (2 rows of 3)
+   ========================================================================== */
+.projects__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 2.4vw, 32px);
+  list-style: none;
+}
+@media (max-width: 1023px) { .projects__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .projects__grid { grid-template-columns: minmax(0, 1fr); } }
+
+.project { perspective: 1200px; }
+.project__card {
+  --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 50%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+  padding: 10px 10px 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transform-style: preserve-3d;
+  transition: transform 0.6s var(--ease-out), box-shadow 0.6s var(--ease-out), border-color 0.4s;
+}
+.project__card.is-tilting { transition: transform 0.12s linear, box-shadow 0.6s var(--ease-out); }
+.project__card:hover { box-shadow: 0 30px 60px -30px rgba(225, 6, 0, 0.45); }
+
+.project__media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid var(--line);
+}
+.project__media img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--ease-out);
+}
+.project__card:hover .project__media img { transform: scale(1.045); }
+
+.project__body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 6px 8px 0;
+  transform: translateZ(30px);   /* lifts the text off the card when tilted */
+}
+.project__num {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--accent);
+}
+.project__title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+.project__kicker {
+  margin-top: 4px;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.project__desc {
+  padding-inline: 8px;
+  font-size: 0.88rem;
+  color: #a9a9a9;
+  transform: translateZ(20px);
+}
+.project .tags { padding-inline: 8px; transform: translateZ(20px); }
+.project__links {
+  display: flex;
+  gap: 20px;
+  margin-top: auto;
+  padding: 4px 8px 0;
+}
+.project__links a {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--text);
+  padding-block: 6px;
+  border-bottom: 1px solid var(--accent);
+}
+
+/* Glare: a soft light spot that follows the pointer (--mx/--my set by JS) */
+.project__glare {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.16), transparent 42%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.project__card:hover .project__glare { opacity: 1; }
+
+/* Tracing border: conic gradient masked to a 1px ring (see animations.css for the sweep) */
+.project__border {
+  position: absolute;
+  inset: -1px;
+  z-index: 3;
+  pointer-events: none;
+  padding: 1px;
+  background: conic-gradient(from -90deg at 50% 50%, var(--accent) var(--sweep), transparent 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+
+
+/* ==========================================================================
+   EXPERIENCE — a data pipeline: SVG path through nodes, cards beside them
+   ========================================================================== */
+.pipeline { position: relative; }
+.pipeline__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.pipeline__track {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 2;
+  stroke-dasharray: 2 8;
+  stroke-linecap: round;
+}
+.pipeline__line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px rgba(225, 6, 0, 0.7));
+}
+.pipeline__packet {
+  fill: #fff;
+  filter: drop-shadow(0 0 4px #ff2a1f) drop-shadow(0 0 10px var(--accent));
+}
+
+.pipeline__list {
+  position: relative;
+  display: grid;
+  gap: clamp(28px, 5vw, 64px);
+  list-style: none;
+}
+.pipeline__stage {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.pipeline__node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 48px; height: 48px;
+  margin-top: 20px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  background: var(--bg);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--accent-text);
+  transition: background 0.4s, color 0.4s, box-shadow 0.4s;
+}
+.pipeline__card {
+  position: relative;
+  padding: clamp(20px, 3vw, 32px);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.pipeline__label { margin-bottom: 10px; }
+.pipeline__role { font-size: clamp(1.05rem, 1.6vw, 1.3rem); }
+.pipeline__org {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.pipeline__points {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0;
+  padding-left: 18px;
+  font-size: 0.9rem;
+  color: #bdbdbd;
+}
+.pipeline__points li::marker { color: var(--accent); }
+.pipeline__stage--end .pipeline__card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(120deg, rgba(225, 6, 0, 0.16), transparent 70%), var(--surface);
+  border-color: rgba(225, 6, 0, 0.4);
+}
+.pipeline__stage--end .pipeline__role { font-size: 1.05rem; }
+
+/* Desktop: cards alternate sides, nodes sit in a central lane (offset so the path curves) */
+@media (min-width: 900px) {
+  .pipeline__stage { grid-template-columns: minmax(0, 1fr) 160px minmax(0, 1fr); gap: 0; }
+  .pipeline__node { grid-column: 2; grid-row: 1; }
+  .pipeline__stage[data-side='right'] .pipeline__node { justify-self: start; }
+  .pipeline__stage[data-side='right'] .pipeline__card { grid-column: 3; grid-row: 1; }
+  .pipeline__stage[data-side='left'] .pipeline__node { justify-self: end; }
+  .pipeline__stage[data-side='left'] .pipeline__card { grid-column: 1; grid-row: 1; }
+}
+
+
+/* ==========================================================================
+   ABOUT ROW — Education & Skills | Work Process | Quote
+   ========================================================================== */
+.about { border-top: 1px solid var(--line); }
+.about__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: var(--maxw);
+  margin-inline: auto;
+}
+.about__col {
+  padding: clamp(48px, 6vw, 72px) var(--gutter);
+  border-bottom: 1px solid var(--line);
+}
+.about__col .section__title { margin-bottom: 28px; }
+
+@media (min-width: 768px) {
+  .about__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .about__col--edu { border-right: 1px solid var(--line); }
+  .quote { grid-column: 1 / -1; }
+}
+@media (min-width: 1180px) {
+  .about__grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 0.72fr); }
+  .about__col { border-bottom: 0; }
+  .about__col--skills { border-right: 1px solid var(--line); }
+  .quote { grid-column: auto; }
+}
+
+/* ---------- Education ---------- */
+.edu { list-style: none; margin: 14px 0 32px; }
+.edu__item {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 16px;
+  padding-block: 12px;
+}
+.edu__text { display: grid; gap: 2px; }
+/* Logo badge: an image from content.js, or a glass monogram */
+.edu__badge {
+  display: grid;
+  place-items: center;
+  width: 46px; height: 46px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 12px;
+  object-fit: contain;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+.edu__degree { font-size: 0.9rem; font-weight: 600; }
+.edu__school { font-size: 0.8rem; color: var(--muted); }
+.edu__period { font-size: 0.75rem; color: var(--accent-text); white-space: nowrap; }
+
+/* ---------- Certifications ---------- */
+.certs { list-style: none; margin: 12px 0 32px; display: grid; gap: 2px; }
+.cert {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 0.84rem;
+  text-decoration: none;
+}
+.cert__issuer { flex: none; font-size: 0.72rem; color: var(--muted); }
+a.cert .cert__name { transition: color 0.3s, translate 0.45s var(--spring); }
+a.cert:hover .cert__name, a.cert:focus-visible .cert__name { color: var(--accent-text); translate: 4px 0; }
+
+/* ---------- Skills circuit board ---------- */
+.skills__board { position: relative; display: grid; gap: 22px; }
+.skills__circuit {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.circuit__line {
+  fill: none;
+  stroke: #3a3a3a;
+  stroke-width: 1.25;
+  stroke-dasharray: 3 5;
+  transition: stroke 0.35s, opacity 0.35s;
+}
+.circuit__dot { fill: #3a3a3a; transition: fill 0.35s, opacity 0.35s; }
+.circuit__line.is-lit { stroke: var(--accent); filter: drop-shadow(0 0 3px rgba(225, 6, 0, 0.9)); }
+.circuit__dot.is-lit { fill: var(--accent); }
+.circuit__line.is-dim, .circuit__dot.is-dim { opacity: 0.25; }
+
+.skill-group { position: relative; }
+.skill-group__hub {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.3s;
+}
+/* The "pin" the circuit bus starts from (JS reads its position) */
+.skill-group__pin {
+  width: 9px; height: 9px;
+  border: 1px solid #555;
+  background: var(--bg);
+  transition: background 0.3s, border-color 0.3s;
+}
+.skill-group__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  padding-left: 28px;
+  list-style: none;
+}
+.chip {
+  position: relative;
+  z-index: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: border-color 0.3s, color 0.3s, box-shadow 0.3s;
+}
+.skill-group.is-lit .skill-group__hub { color: var(--text); }
+.skill-group.is-lit .skill-group__pin { background: var(--accent); border-color: var(--accent); }
+.skill-group.is-lit .chip { border-color: var(--accent); box-shadow: 0 0 14px -4px var(--accent); }
+
+/* ---------- Quote card ---------- */
+.quote {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+  overflow: hidden;
+  padding: clamp(48px, 6vw, 72px) var(--gutter);
+  background:
+    radial-gradient(80% 60% at 100% 0%, rgba(225, 6, 0, 0.55), transparent 70%),
+    linear-gradient(165deg, #6E0300 0%, #3A0100 55%, #170000 100%);
+}
+.quote__mark { width: 44px; height: 44px; color: #ff4d42; }
+.quote__text {
+  margin-top: 24px;
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+  line-height: 1.45;
+  max-width: 22ch;
+}
+.quote__sig {
+  margin-top: 18px;
+  font-family: var(--font-script);
+  font-size: 2.6rem;
+  line-height: 1;
+}
+.quote__cta {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 22ch;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.6;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.quote__cta .icon { width: 16px; height: 16px; color: #ff4d42; }
+
+
+/* ==========================================================================
+   CONTACT
+   ========================================================================== */
+.contact__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 48px;
+  align-items: center;
+}
+@media (min-width: 960px) {
+  .contact__grid { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr) minmax(0, 1.1fr); }
+}
+.contact__title {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: clamp(2rem, 3.6vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+.contact__title .icon { width: 22px; height: 22px; margin-top: 0.5em; color: var(--accent); }
+.contact__text { margin-top: 20px; max-width: 36ch; color: #a9a9a9; font-size: 0.92rem; }
+
+.btn-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 36px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--accent-text);
+  transition: transform 0.4s var(--ease-out);
+}
+.btn-cta__circle {
+  display: grid;
+  place-items: center;
+  width: 52px; height: 52px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  color: var(--text);
+  transition: background 0.3s;
+}
+.btn-cta__circle .icon { width: 20px; height: 20px; }
+.btn-cta:hover .btn-cta__circle, .btn-cta:focus-visible .btn-cta__circle { background: var(--accent); }
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding: 28px var(--gutter);
+  border-top: 1px solid var(--line);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.footer__links { display: flex; flex-wrap: wrap; gap: 20px; list-style: none; }
+.footer a { text-decoration: none; padding-block: 8px; display: inline-block; transition: color 0.3s; }
+.footer a:hover, .footer a:focus-visible { color: var(--text); }
+
+
+/* ==========================================================================
+   LIQUID GLASS — translucent, blurred, edge-lit surfaces
+   Panels blur + saturate what's behind them (the 3D bubbles). Small controls
+   also bend it through the #liquid-glass SVG displacement filter in index.html
+   (Chromium); other browsers keep the plain blur declared just before it.
+   ========================================================================== */
+
+/* ---------- Panels ---------- */
+.project__card {
+  background: var(--glass-fill);
+  border-color: var(--glass-edge);
+  border-radius: 18px;
+  box-shadow: var(--glass-shadow);
+}
+.project__card:hover { box-shadow: var(--glass-shadow), 0 30px 70px -30px rgba(225, 6, 0, 0.55); }
+/* Blur lives on a pseudo-layer so the card itself keeps preserve-3d for its tilt depth */
+.project__card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+}
+/* Specular light in the top-left corner, red bounce light bottom-right */
+.project__card::after,
+.pipeline__card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 70% at 0% 0%, rgba(255, 255, 255, 0.11), transparent 45%),
+    radial-gradient(80% 60% at 100% 100%, rgba(225, 6, 0, 0.10), transparent 60%);
+}
+.project__media { border-radius: 12px; }
+.project__glare { border-radius: inherit; }
+
+.pipeline__card {
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--glass-fill);
+  border-color: var(--glass-edge);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+}
+/* Light sheen sweeps across on hover */
+.pipeline__card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.12) 50%, transparent 65%);
+  translate: -120% 0;
+  transition: translate 1.1s var(--ease-out);
+}
+.pipeline__card:hover::after { translate: 120% 0; }
+
+.topbar.is-stuck {
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0.6), rgba(10, 10, 10, 0.35)), var(--glass-fill);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.07), 0 10px 30px -20px rgba(0, 0, 0, 0.9);
+}
+
+/* ---------- Small controls (refractive) ---------- */
+.chip, .icon-btn, .social__icon, .edu__badge, .btn-cta__circle, .skill-group__pin {
+  background: var(--glass-fill);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+  backdrop-filter: blur(10px) saturate(180%);
+  backdrop-filter: url(#liquid-glass) blur(3px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+    0 6px 18px -8px rgba(0, 0, 0, 0.7);
+}
+.chip, .tag { border-radius: 999px; }
+.tag { background: rgba(255, 255, 255, 0.03); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08); }
+.chip { padding-inline: 14px; }
+.skill-group__pin { border-radius: 3px; }
+
+/* Glass cursor ring: magnifies / bends whatever it passes over */
+.cursor__ring {
+  -webkit-backdrop-filter: blur(1.5px) saturate(200%);
+  backdrop-filter: blur(1.5px) saturate(200%);
+  background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.18), transparent 55%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+
+/* ==========================================================================
+   MICRO-INTERACTIONS
+   Uses the individual `scale` / `translate` properties so they stack on top of
+   the transforms that JS sets (magnetic pull, tilt) instead of replacing them.
+   ========================================================================== */
+.icon-btn, .btn-cta__circle, .social__icon, .chip {
+  position: relative;
+  transition: scale 0.45s var(--spring), translate 0.45s var(--spring),
+    background-color 0.3s, border-color 0.3s, box-shadow 0.3s, color 0.3s;
+}
+/* Ripple hosts clip their ripple */
+.icon-btn, .btn-cta__circle, .chip, .social,
+.topbar__nav a, .project__links a { overflow: hidden; }
+
+/* Hover: buttons swell, chips lift with a red under-glow */
+.icon-btn:hover, .btn-cta:hover .btn-cta__circle, .social:hover .social__icon { scale: 1.1; }
+.chip:hover {
+  translate: 0 -3px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 12px 24px -10px rgba(225, 6, 0, 0.65);
+}
+/* Press: springy squash */
+.icon-btn:active, .btn-cta:active .btn-cta__circle, .chip:active,
+.social:active .social__icon { scale: 0.88; }
+
+
+/* Project links: underline draws in from the left */
+.project__links a {
+  border-bottom-color: rgba(225, 6, 0, 0.35);
+  background: linear-gradient(var(--accent), var(--accent)) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.5s var(--ease-out);
+}
+.project__links a:hover, .project__links a:focus-visible { background-size: 100% 1px; }
+
+/* Stats glow on hover */
+.stat__num { transition: text-shadow 0.4s; }
+.stat:hover .stat__num { text-shadow: 0 0 26px rgba(225, 6, 0, 0.75); }
+
+/* Ripple element injected by interactions.js on press */
+.ripple {
+  position: absolute;
+  left: var(--rx); top: var(--ry);
+  width: var(--rs); height: var(--rs);
+  margin: calc(var(--rs) / -2) 0 0 calc(var(--rs) / -2);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.45), rgba(255, 90, 70, 0.15) 45%, transparent 70%);
+  pointer-events: none;
+  animation: ripple 0.7s var(--ease-out) forwards;
+}
+
+
+/* ==========================================================================
+   LOGOS — skill chips and certifications (Simple Icons, see content.js)
+   ========================================================================== */
+.chip { display: inline-flex; align-items: center; gap: 7px; }
+.chip__logo { width: 13px; height: 13px; flex: none; opacity: 0.85; transition: opacity 0.3s, scale 0.45s var(--spring); }
+.chip:hover .chip__logo, .skill-group.is-lit .chip__logo { opacity: 1; scale: 1.15; }
+
+.cert { align-items: center; }
+.cert__logo {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 26px; height: 26px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 8px;
+  background: var(--glass-fill);
+}
+.cert__logo img { width: 14px; height: 14px; }
+.cert__logo:empty::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.cert__name { flex: 1; }
+
+
+/* ==========================================================================
+   CONTACT — glass social cards + rotating "Contact me" badge
+   ========================================================================== */
+.socials { display: grid; gap: 14px; list-style: none; perspective: 900px; }
+
+/* Each card is the link; the whole card tilts toward the pointer (--rx/--ry from JS) */
+.social {
+  --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.12), transparent 45%),
+    var(--glass-fill);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+  text-decoration: none;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 0.6s var(--ease-out), border-color 0.3s, box-shadow 0.4s;
+}
+.social.is-tilting { transition: transform 0.12s linear, border-color 0.3s, box-shadow 0.4s; }
+.social:hover, .social:focus-visible {
+  border-color: rgba(225, 6, 0, 0.55);
+  box-shadow: var(--glass-shadow), 0 18px 40px -18px rgba(225, 6, 0, 0.6);
+}
+.social__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 46px; height: 46px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 14px;
+}
+.social__icon .icon { width: 20px; height: 20px; }
+.social:hover .social__icon { background: var(--accent); border-color: var(--accent); }
+.social__text { display: grid; gap: 2px; flex: 1; }
+.social__title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1.1;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.social__note { font-size: 0.75rem; color: var(--muted); }
+.social__arrow { color: var(--muted); transition: translate 0.45s var(--spring), color 0.3s; }
+.social__arrow .icon { width: 20px; height: 20px; }
+.social:hover .social__arrow { translate: 5px 0; color: var(--text); }
+
+/* Laptop mock (pure CSS) — tilts toward the pointer; the screen hosts the Contact me badge */
+.laptop { perspective: 1400px; justify-self: center; width: min(100%, 520px); }
+.laptop__inner {
+  --rx: 6deg; --ry: -16deg;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transform-style: preserve-3d;
+  transition: transform 0.8s var(--ease-out);
+}
+.laptop__inner.is-tilting { transition: transform 0.12s linear; }
+.laptop__screen {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  padding: 6% 6% 5%;
+  border: 10px solid #1c1c1c;
+  border-bottom-width: 14px;
+  border-radius: 14px 14px 0 0;
+  background:
+    radial-gradient(50% 60% at 50% 45%, rgba(225, 6, 0, 0.28), transparent 70%),
+    linear-gradient(160deg, #141010, #0a0a0a 60%);
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.9), 0 0 0 1px #2a2a2a;
+}
+/* Light sweeping across the glass of the screen */
+.laptop__screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.07) 50%, transparent 60%);
+}
+.laptop__nav { position: absolute; top: 7%; left: 6%; right: 6%; display: flex; gap: 6px; }
+.laptop__nav span { width: 14%; height: 4px; background: #2a2a2a; border-radius: 2px; }
+.laptop__nav span:first-child { width: 20%; background: #444; }
+.laptop__base {
+  height: 14px;
+  margin-inline: -8%;
+  border-radius: 0 0 14px 14px;
+  background: linear-gradient(180deg, #2a2a2a, #121212);
+}
+/* Small glowing bubbles floating up the screen */
+.laptop__bubble {
+  position: absolute;
+  bottom: -20px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), rgba(255, 80, 60, 0.15) 45%, transparent 70%);
+  box-shadow: 0 0 10px rgba(225, 6, 0, 0.6);
+  pointer-events: none;
+}
+.laptop__bubble:nth-of-type(1) { left: 14%; }
+.laptop__bubble:nth-of-type(2) { left: 78%; width: 8px; height: 8px; }
+.laptop__bubble:nth-of-type(3) { left: 62%; width: 16px; height: 16px; }
+
+/* Badge: circular text ring that slowly rotates around a glass core with an arrow */
+.contact-me {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.contact-me__badge {
+  --badge: clamp(92px, 10vw, 140px);
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--badge);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  text-decoration: none;
+}
+.contact-me__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.contact-me__ring text {
+  fill: var(--text);
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+}
+.contact-me__core {
+  display: grid;
+  place-items: center;
+  width: 46%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid var(--glass-edge);
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.45), transparent 30%),
+    radial-gradient(circle at 50% 60%, rgba(225, 6, 0, 0.55), rgba(225, 6, 0, 0.12) 70%);
+  -webkit-backdrop-filter: blur(8px) saturate(180%);
+  backdrop-filter: blur(8px) saturate(180%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 0 40px rgba(225, 6, 0, 0.45);
+  transition: scale 0.45s var(--spring), box-shadow 0.4s;
+}
+.contact-me__core .icon { width: 30%; height: 30%; rotate: -45deg; transition: rotate 0.45s var(--spring); }
+.contact-me__badge:hover .contact-me__core { scale: 1.08; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 0 60px rgba(225, 6, 0, 0.7); }
+.contact-me__badge:hover .contact-me__core .icon { rotate: 0deg; }
+.contact-me__badge:active .contact-me__core { scale: 0.92; }
+/* Little glowing bubbles orbiting the badge */
+.contact-me__orb {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 10px; height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff, rgba(255, 80, 60, 0.6) 50%, transparent 70%);
+  box-shadow: 0 0 12px rgba(225, 6, 0, 0.9);
+  pointer-events: none;
+}
+.contact-me__heading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.1rem, 2.2vw, 1.9rem);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--text);
+  text-shadow: 0 0 28px rgba(225, 6, 0, 0.55);
+}
+.cert__logo .icon { width: 14px; height: 14px; color: #e6e6e6; }

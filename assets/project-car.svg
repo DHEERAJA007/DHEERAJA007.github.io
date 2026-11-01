@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000">
+  <!-- Mock screen: Connected Car Analytics (HUD gauges + live chart + alerts) -->
+  <defs>
+    <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E10600" stop-opacity=".45"/><stop offset="1" stop-color="#E10600" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="#080808"/>
+  <g stroke="#151515" stroke-width="2">
+    <path d="M0 200H1600M0 400H1600M0 600H1600M0 800H1600M200 0V1000M400 0V1000M600 0V1000M800 0V1000M1000 0V1000M1200 0V1000M1400 0V1000"/>
+  </g>
+  <text x="80" y="100" fill="#f5f5f5" font-family="Arial Black, Arial, sans-serif" font-size="30" letter-spacing="3">CONNECTED CAR</text>
+  <text x="1520" y="100" fill="#E10600" font-family="Arial, sans-serif" font-size="22" letter-spacing="4" text-anchor="end">● LIVE · 1s</text>
+  <!-- speed gauge -->
+  <g transform="translate(330 420)">
+    <circle r="230" fill="#0f0f0f" stroke="#222" stroke-width="2"/>
+    <path d="M-185 135 A230 230 0 1 1 185 135" fill="none" stroke="#1d1d1d" stroke-width="26" stroke-linecap="round" transform="scale(.86)"/>
+    <path d="M-185 135 A230 230 0 0 1 120 -196" fill="none" stroke="#E10600" stroke-width="26" stroke-linecap="round" transform="scale(.86)"/>
+    <text y="20" fill="#f5f5f5" font-family="Impact, Arial Black, sans-serif" font-size="130" text-anchor="middle">86</text>
+    <text y="75" fill="#8a8a8a" font-family="Arial, sans-serif" font-size="24" letter-spacing="6" text-anchor="middle">KM/H</text>
+  </g>
+  <!-- rpm / fuel / temp tiles -->
+  <g font-family="Arial, sans-serif" letter-spacing="3">
+    <rect x="640" y="180" width="270" height="150" fill="#111" stroke="#252525" stroke-width="2"/>
+    <text x="665" y="222" fill="#8a8a8a" font-size="20">RPM</text>
+    <text x="665" y="295" fill="#f5f5f5" font-family="Impact, Arial Black, sans-serif" font-size="60">2,940</text>
+    <rect x="640" y="350" width="270" height="150" fill="#111" stroke="#252525" stroke-width="2"/>
+    <text x="665" y="392" fill="#8a8a8a" font-size="20">ENGINE °C</text>
+    <text x="665" y="465" fill="#f5f5f5" font-family="Impact, Arial Black, sans-serif" font-size="60">92</text>
+    <rect x="640" y="520" width="270" height="150" fill="#111" stroke="#252525" stroke-width="2"/>
+    <text x="665" y="562" fill="#8a8a8a" font-size="20">HEALTH</text>
+    <text x="665" y="635" fill="#22c55e" font-family="Impact, Arial Black, sans-serif" font-size="60">94%</text>
+  </g>
+  <!-- live chart -->
+  <rect x="950" y="180" width="570" height="490" fill="#0f0f0f" stroke="#252525" stroke-width="2"/>
+  <text x="980" y="225" fill="#8a8a8a" font-family="Arial, sans-serif" font-size="20" letter-spacing="3">SPEED · LAST 60s</text>
+  <path d="M980 560 L1030 520 L1080 540 L1130 470 L1180 490 L1230 410 L1280 440 L1330 380 L1380 400 L1430 330 L1490 360 L1490 640 L980 640Z" fill="url(#fill)"/>
+  <polyline points="980,560 1030,520 1080,540 1130,470 1180,490 1230,410 1280,440 1330,380 1380,400 1430,330 1490,360" fill="none" stroke="#E10600" stroke-width="4"/>
+  <circle cx="1490" cy="360" r="9" fill="#fff"/>
+  <!-- alerts -->
+  <g font-family="Arial, sans-serif" font-size="22" letter-spacing="2">
+    <rect x="80" y="720" width="1440" height="70" fill="#140303" stroke="#5a0200" stroke-width="2"/>
+    <rect x="80" y="720" width="8" height="70" fill="#E10600"/>
+    <text x="115" y="763" fill="#f5f5f5">ALERT  Harsh braking detected at 14:32:08 — trip score −3</text>
+    <rect x="80" y="810" width="1440" height="70" fill="#111" stroke="#252525" stroke-width="2"/>
+    <text x="115" y="853" fill="#bbb">TRIP   42.6 km · avg 54 km/h · fuel 3.1 L  — export PDF report ↓</text>
+  </g>
+</svg>

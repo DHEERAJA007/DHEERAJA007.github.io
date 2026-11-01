@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dheeraj Alahari — Computer Science Enthusiast</title>
+  <meta name="description" content="Portfolio of Dheeraj Alahari, a Computer Science graduate from VIT building machine-learning systems, data dashboards and backend APIs.">
+  <meta name="theme-color" content="#0A0A0A">
+  <meta name="color-scheme" content="dark">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <!-- Open Graph (update the URL / image once deployed) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Dheeraj Alahari — Computer Science Enthusiast">
+  <meta property="og:description" content="Machine learning, data dashboards and backend APIs.">
+  <!-- TODO: add a 1200x630 PNG and an absolute URL: <meta property="og:image" content="https://your-site/assets/og-image.png"> -->
+
+  <!-- Fonts: Anton (display), Inter (body), Allura (script accents) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=Anton&family=Inter:wght@400;500;600;700&display=swap">
+
+  <!-- ?v=… is a cache-buster: change it (here AND in the import map below) every time you
+       publish an update, so browsers fetch fresh files instead of mixing in old cached ones -->
+  <link rel="stylesheet" href="css/base.css?v=2026-11-01">
+  <link rel="stylesheet" href="css/sections.css?v=2026-11-01">
+  <link rel="stylesheet" href="css/animations.css?v=2026-11-01">
+
+  <!--
+    Motion is always on: animations run (initial hidden states in CSS are gated
+    by "motion-ok"). "is-intro" shows the bubble loader (js/intro.js).
+  -->
+  <script>
+    (function (d) {
+      d.className = 'js motion-ok is-intro';
+
+      // Watchdog: js/main.js sets window.__portfolioStarted as soon as it runs. If it
+      // never does (a CDN is blocked, or the browser mixed old cached script files),
+      // drop the loader and say so instead of spinning forever.
+      setTimeout(function () {
+        if (window.__portfolioStarted) return;
+        var intro = document.querySelector('.intro');
+        if (intro) intro.remove();
+        d.classList.remove('is-intro');
+        var p = document.createElement('p');
+        p.id = 'load-error';
+        p.className = 'noscript';
+        p.textContent = 'The page scripts didn’t load. Try a hard refresh (Ctrl + Shift + R).';
+        document.body.prepend(p);
+      }, 10000);
+    })(document.documentElement);
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Intro loader: a glass bubble with a 0–100 counter; the page then zooms in through it -->
+  <div class="intro" aria-hidden="true">
+    <span class="intro__mini" style="--x:18%;--y:72%;--s:14px;--d:0s"></span>
+    <span class="intro__mini" style="--x:80%;--y:66%;--s:22px;--d:-1.4s"></span>
+    <span class="intro__mini" style="--x:30%;--y:22%;--s:10px;--d:-2.2s"></span>
+    <span class="intro__mini" style="--x:70%;--y:18%;--s:16px;--d:-0.6s"></span>
+    <span class="intro__mini" style="--x:88%;--y:40%;--s:9px;--d:-3s"></span>
+    <span class="intro__mini" style="--x:10%;--y:38%;--s:18px;--d:-1.9s"></span>
+    <div class="intro__bubble"><span class="intro__count">0</span></div>
+    <p class="intro__label">Loading portfolio</p>
+  </div>
+
+  <!-- Global chrome (decorative, hidden from assistive tech) -->
+  <div class="progress" aria-hidden="true"><span class="progress__bar"></span></div>
+  <div class="cursor" aria-hidden="true"><span class="cursor__ring"></span><span class="cursor__dot"></span></div>
+  <div class="grain" aria-hidden="true"></div>
+  <canvas class="bg3d" aria-hidden="true"></canvas>
+
+  <!-- SVG filter used by the "liquid glass" controls: bends whatever is behind them -->
+  <svg class="sr-only" aria-hidden="true" focusable="false">
+    <filter id="liquid-glass" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="4" result="noise"/>
+      <feGaussianBlur in="noise" stdDeviation="2.5" result="soft"/>
+      <feDisplacementMap in="SourceGraphic" in2="soft" scale="26" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
+
+  <!-- .page is what the intro zooms into. Every block inside is filled by js/render.js from js/content.js -->
+  <div class="page" id="page">
+    <header class="topbar" id="topbar"></header>
+
+    <main id="main" tabindex="-1">
+      <section class="hero" id="top" aria-labelledby="hero-name"></section>
+      <section class="section projects" id="work" aria-labelledby="work-title"></section>
+      <section class="section experience" id="experience" aria-labelledby="experience-title"></section>
+      <div class="about" id="about"></div>
+      <section class="section contact" id="contact" aria-labelledby="contact-title"></section>
+    </main>
+
+    <footer class="footer" id="footer"></footer>
+  </div>
+
+  <noscript>
+    <p class="noscript">This portfolio renders its content with JavaScript. Please enable JavaScript to view it.</p>
+  </noscript>
+
+  <!-- Animation libraries (classic scripts, deferred — they run before the module below) -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+
+  <!-- App entry point (Three.js is imported dynamically after window load) -->
+  <!-- Every module is fetched with the same ?v= as the stylesheets, so they always match -->
+  <script type="importmap">
+  {
+    "imports": {
+      "./js/main.js": "./js/main.js?v=2026-11-01",
+      "./js/content.js": "./js/content.js?v=2026-11-01",
+      "./js/render.js": "./js/render.js?v=2026-11-01",
+      "./js/interactions.js": "./js/interactions.js?v=2026-11-01",
+      "./js/scroll.js": "./js/scroll.js?v=2026-11-01",
+      "./js/intro.js": "./js/intro.js?v=2026-11-01",
+      "./js/hero3d.js": "./js/hero3d.js?v=2026-11-01",
+      "./js/bg3d.js": "./js/bg3d.js?v=2026-11-01",
+      "./js/bubble.js": "./js/bubble.js?v=2026-11-01"
+    }
+  }
+  </script>
+  <script type="module" src="js/main.js?v=2026-11-01"></script>
+</body>
+</html>

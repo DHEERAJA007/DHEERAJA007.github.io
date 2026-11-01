@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000">
+  <!-- Mock screen: Credit Risk Assessment (score gauge + PD + form) -->
+  <defs>
+    <linearGradient id="arc" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5a0200"/><stop offset=".55" stop-color="#E10600"/><stop offset="1" stop-color="#ff8a6a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".72" cy=".5" r=".45">
+      <stop offset="0" stop-color="#E10600" stop-opacity=".35"/><stop offset="1" stop-color="#E10600" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="#0c0c0c"/>
+  <rect width="1600" height="1000" fill="url(#glow)"/>
+  <text x="90" y="110" fill="#f5f5f5" font-family="Arial Black, Arial, sans-serif" font-size="32" letter-spacing="3">CREDIT·RISK</text>
+  <g fill="#666" font-family="Arial, sans-serif" font-size="22" letter-spacing="3">
+    <text x="900" y="108">ASSESS</text><text x="1060" y="108">MODEL</text><text x="1210" y="108">API</text>
+  </g>
+  <g font-family="Arial Black, Arial, sans-serif" font-size="84" fill="#f5f5f5">
+    <text x="90" y="270">SCORE THE</text><text x="90" y="365">RISK, NOT</text><text x="90" y="460" fill="#E10600">THE PERSON.</text>
+  </g>
+  <!-- form fields -->
+  <g font-family="Arial, sans-serif" font-size="20" fill="#8a8a8a" letter-spacing="2">
+    <rect x="90" y="530" width="560" height="64" fill="#151515" stroke="#2c2c2c" stroke-width="2"/><text x="115" y="570">ANNUAL INCOME   ₹ 8,40,000</text>
+    <rect x="90" y="612" width="560" height="64" fill="#151515" stroke="#2c2c2c" stroke-width="2"/><text x="115" y="652">LOAN AMOUNT     ₹ 2,50,000</text>
+    <rect x="90" y="694" width="560" height="64" fill="#151515" stroke="#2c2c2c" stroke-width="2"/><text x="115" y="734">CREDIT HISTORY  6 YEARS</text>
+  </g>
+  <rect x="90" y="790" width="260" height="66" fill="#E10600"/>
+  <text x="220" y="832" fill="#fff" font-family="Arial, sans-serif" font-size="22" letter-spacing="4" text-anchor="middle">PREDICT →</text>
+  <!-- gauge -->
+  <path d="M900 640 A330 330 0 0 1 1560 640" fill="none" stroke="#1f1f1f" stroke-width="44" stroke-linecap="round"/>
+  <path d="M900 640 A330 330 0 0 1 1438 380" fill="none" stroke="url(#arc)" stroke-width="44" stroke-linecap="round"/>
+  <text x="1230" y="590" fill="#f5f5f5" font-family="Impact, Arial Black, sans-serif" font-size="150" text-anchor="middle">782</text>
+  <text x="1230" y="640" fill="#8a8a8a" font-family="Arial, sans-serif" font-size="22" letter-spacing="6" text-anchor="middle">CREDIT SCORE · 300–900</text>
+  <g font-family="Arial, sans-serif" font-size="22" letter-spacing="3">
+    <rect x="930" y="720" width="280" height="130" fill="#141414" stroke="#2a2a2a" stroke-width="2"/>
+    <text x="955" y="765" fill="#8a8a8a">PROB. OF DEFAULT</text>
+    <text x="955" y="825" fill="#f5f5f5" font-family="Impact, Arial Black, sans-serif" font-size="52">6.8%</text>
+    <rect x="1250" y="720" width="280" height="130" fill="#141414" stroke="#2a2a2a" stroke-width="2"/>
+    <text x="1275" y="765" fill="#8a8a8a">DECISION</text>
+    <text x="1275" y="825" fill="#22c55e" font-family="Impact, Arial Black, sans-serif" font-size="52">APPROVE</text>
+  </g>
+</svg>

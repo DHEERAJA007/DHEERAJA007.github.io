@@ -1,0 +1,255 @@
+/* ==========================================================================
+   animations.css — keyframes, entrance states, hover effects, reduced motion
+
+   Convention: any "start hidden, then animate in" state is scoped to
+   html.motion-ok so content is always visible when motion is off or JS fails.
+   ========================================================================== */
+
+
+/* ---------- Registered custom properties (lets the browser interpolate them) ---------- */
+@property --sweep {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+
+/* ==========================================================================
+   HERO ENTRANCE (CSS only, triggered when JS adds html.is-loaded)
+   ========================================================================== */
+
+/* 1. Giant name: each letter rises from below its word's mask, staggered by --i */
+.motion-ok .hero__letter {
+  transform: translateY(105%);
+  opacity: 0;
+}
+.motion-ok.is-loaded .hero__letter {
+  transform: none;
+  opacity: 1;
+  transition:
+    transform 1.3s var(--ease-out) calc(var(--i) * 55ms),
+    opacity 0.6s ease calc(var(--i) * 55ms);
+}
+
+/* 2. Everything else in the hero fades up in sequence (delay via --delay) */
+.motion-ok [data-intro] {
+  opacity: 0;
+  transform: translateY(18px);
+}
+.motion-ok.is-loaded [data-intro] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 1s ease var(--delay, 0s),
+    transform 1.1s var(--ease-out) var(--delay, 0s);
+}
+/* Photo uses a subtle zoom-out instead of a slide */
+.motion-ok .hero__photo[data-intro] { transform: scale(1.06); }
+
+/* "Open to work" status dot */
+.motion-ok .topbar__pulse { animation: status-ping 2.4s ease-out infinite; }
+@keyframes status-ping {
+  0%   { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55); }
+  70%  { box-shadow: 0 0 0 9px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+
+/* ==========================================================================
+   SPLIT-TEXT TITLES (markup produced by splitText() in scroll.js)
+   Each word is a mask; GSAP slides the letters up from below it.
+   ========================================================================== */
+.split__word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.split__char { display: inline-block; will-change: transform; }
+
+
+/* ==========================================================================
+   PROJECT CARDS — border trace on hover
+   --sweep animates 0deg → 360deg, so the red conic slice grows around the card.
+   ========================================================================== */
+.project__border { transition: --sweep 0.9s var(--ease-in-out); }
+.project__card:hover .project__border,
+.project__card:focus-within .project__border { --sweep: 360deg; }
+
+
+/* ==========================================================================
+   EXPERIENCE PIPELINE — cards pop in when the drawn line reaches their node
+   (scroll.js toggles .is-reached on each stage)
+   ========================================================================== */
+.motion-ok .pipeline__card {
+  opacity: 0;
+  transform: translateY(28px) scale(0.96);
+  transition: opacity 0.6s ease, transform 0.8s var(--ease-out);
+}
+.motion-ok .pipeline__card > * {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s ease, transform 0.6s var(--ease-out);
+}
+.motion-ok .pipeline__stage.is-reached .pipeline__card,
+.motion-ok .pipeline__stage.is-reached .pipeline__card > * {
+  opacity: 1;
+  transform: none;
+}
+/* Stagger the inner elements by their index --k */
+.motion-ok .pipeline__stage.is-reached .pipeline__card > * {
+  transition-delay: calc(0.12s + var(--k, 0) * 0.07s);
+}
+.pipeline__stage.is-reached .pipeline__node,
+.static .pipeline__node {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 0 6px rgba(225, 6, 0, 0.15), 0 0 24px rgba(225, 6, 0, 0.6);
+}
+.motion-ok .pipeline__stage.is-reached .pipeline__node { animation: node-pop 0.6s var(--ease-out); }
+@keyframes node-pop {
+  0%   { transform: scale(0.6); }
+  60%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+
+/* ==========================================================================
+   SKILLS CIRCUIT — dashes "flow" along every trace; lit traces flow faster
+   ========================================================================== */
+.motion-ok .circuit__line { animation: circuit-flow 1.8s linear infinite; }
+.motion-ok .circuit__line.is-lit { animation-duration: 0.6s; }
+@keyframes circuit-flow { to { stroke-dashoffset: -16; } }
+
+
+@keyframes ping {
+  from { transform: scale(1); opacity: 0.9; }
+  to   { transform: scale(1.9); opacity: 0; }
+}
+
+
+/* ==========================================================================
+   HOVER EFFECTS
+   ========================================================================== */
+
+/* Nav links: underline grows from the left */
+.topbar__nav a::after {
+  content: '';
+  position: absolute;
+  left: 2px; right: 2px; bottom: 4px;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.45s var(--ease-out);
+}
+.topbar__nav a:hover::after, .topbar__nav a:focus-visible::after { transform: scaleX(1); }
+
+/* Arrow nudges right */
+.link-arrow .icon, .icon-btn .icon, .btn-cta__circle .icon { transition: transform 0.4s var(--ease-out); }
+.link-arrow:hover .icon, .icon-btn:hover .icon, .btn-cta:hover .btn-cta__circle .icon { transform: translateX(4px); }
+
+/* Magnetic elements spring back smoothly (JS moves them while hovered) */
+[data-magnetic] { transition: transform 0.5s var(--ease-out); }
+[data-magnetic].is-magnet { transition: transform 0.15s linear; }
+
+/* Chips lift slightly */
+.chip:hover { color: var(--text); border-color: #666; }
+
+
+
+/* ==========================================================================
+   FILM GRAIN — jitter the noise tile so it feels like film, not a static texture
+   ========================================================================== */
+.motion-ok .grain { animation: grain 0.9s steps(5) infinite; }
+@keyframes grain {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(-40px, 25px); }
+  40%  { transform: translate(30px, -45px); }
+  60%  { transform: translate(-25px, -15px); }
+  80%  { transform: translate(45px, 35px); }
+  100% { transform: translate(0, 0); }
+}
+
+
+/* ==========================================================================
+   REDUCED MOTION
+   html.static is set when the OS asks for reduced motion (unless the visitor
+   switched motion on with the toggle) or when the animation libraries fail.
+   ========================================================================== */
+.static *, .static *::before, .static *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+.static .grain { animation: none !important; }
+.static .project__card, .static .social, .static .laptop__inner { transform: none !important; }
+
+
+/* ==========================================================================
+   INTRO LOADER
+   ========================================================================== */
+/* The bubble bobs and its outline subtly morphs, like a floating soap bubble */
+.is-intro .intro__bubble { animation: bubble-float 3.2s var(--ease-in-out) infinite alternate; }
+@keyframes bubble-float {
+  0%   { translate: 0 -8px; border-radius: 50% 48% 52% 50% / 50% 52% 48% 50%; }
+  100% { translate: 0 8px;  border-radius: 48% 52% 50% 50% / 52% 48% 50% 50%; }
+}
+.intro__bubble::after { animation: spin 7s linear infinite; }
+/* Small bubbles rise and fade around the loader */
+.intro__mini { opacity: 0; animation: mini-rise 6s ease-in-out infinite; animation-delay: var(--d); }
+@keyframes mini-rise {
+  0%   { translate: 0 30px; opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { translate: 14px -70px; opacity: 0; }
+}
+/* Failsafe: if the script never finishes, get the loader out of the way */
+.is-intro .intro { animation: intro-failsafe 0.6s ease 12s forwards; }
+@keyframes intro-failsafe { to { opacity: 0; visibility: hidden; } }
+
+
+/* ==========================================================================
+   RIPPLE
+   ========================================================================== */
+@keyframes ripple {
+  from { transform: scale(0); opacity: 1; }
+  to   { transform: scale(1); opacity: 0; }
+}
+
+
+/* ==========================================================================
+   CONTACT BADGE — rotating text ring + orbiting bubbles
+   ========================================================================== */
+.contact-me__ring { animation: spin 18s linear infinite; }
+.contact-me__badge:hover .contact-me__ring { animation-duration: 6s; }
+.contact-me__orb { animation: orbit 7s linear infinite; }
+/* (the core is the badge's first <span>, so the orbs are spans 2–4) */
+.contact-me__orb:nth-of-type(3) { animation-duration: 11s; animation-direction: reverse; --orbit-pad: 18px; }
+.contact-me__orb:nth-of-type(4) { animation-duration: 15s; animation-delay: -5s; --orbit-pad: 3px; }
+/* Radius = half the badge (--badge) plus a little, so the orbs circle just outside the text ring */
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(calc(var(--badge) / 2 + var(--orbit-pad, 10px))) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(calc(var(--badge) / 2 + var(--orbit-pad, 10px))) rotate(-360deg); }
+}
+
+/* Laptop screen: bubbles drift up, the glow breathes, a light sweep crosses the glass */
+.laptop__bubble { animation: screen-bubble 6s ease-in infinite; }
+.laptop__bubble:nth-of-type(2) { animation-duration: 8s; animation-delay: -3s; }
+.laptop__bubble:nth-of-type(3) { animation-duration: 7s; animation-delay: -5s; }
+@keyframes screen-bubble {
+  0%   { translate: 0 0; opacity: 0; }
+  15%  { opacity: 1; }
+  100% { translate: 14px -260px; opacity: 0; }
+}
+.laptop__screen { animation: screen-glow 4s var(--ease-in-out) infinite alternate; }
+@keyframes screen-glow { to { background-size: 130% 130%, 100% 100%; } }
+.laptop__screen::after { animation: screen-sweep 5s var(--ease-in-out) infinite; }
+@keyframes screen-sweep {
+  0%, 30% { translate: -100% 0; }
+  70%, 100% { translate: 100% 0; }
+}
