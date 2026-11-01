@@ -40,9 +40,9 @@ export const content = {
     role: ['Computer Science', 'Enthusiast'],
     // One paragraph per entry
     about: [
-      'I’m a Computer Science graduate from VIT who loves turning raw data into things people can use — credit-risk models, intrusion detection, live telemetry dashboards and clean backend APIs.',
+      'I’m a Computer Science graduate from VIT who loves turning raw data into things people can use, credit-risk models, intrusion detection, live telemetry dashboards and clean backend APIs.',
       'Along the way I’ve led a 400+ member maths society and run the tech side of a 700+ student cultural club.',
-      'I’m also a football and F1 addict — and I love working on that data too: lap times, race telemetry, match stats and everything in between.',
+      'I’m also a football and F1 addict and I love working on that data too: lap times, race telemetry, match stats and everything in between.',
     ],
     location: 'Based in India · Open to work',
     photo: {
@@ -99,7 +99,7 @@ export const content = {
         title: 'UPI Statement Insights',
         kicker: 'Data Analytics · Streamlit',
         description:
-          'An interactive finance dashboard that turns raw UPI bank statements into spending insights — category-wise expenses, trends over time and exportable PDF reports.',
+          'An interactive finance dashboard that turns raw UPI bank statements into spending insights category-wise expenses, trends over time and exportable PDF reports.',
         tech: ['Python', 'Pandas', 'Streamlit', 'Plotly'],
         image: 'assets/project-upi.svg',
         alt: 'Mock screen of the UPI dashboard with a spending-by-category donut chart and monthly bars',
@@ -204,7 +204,7 @@ export const content = {
 
   /* ---------- Quote card ---------- */
   quote: {
-    text: 'Good software isn’t just how it looks — it’s how reliably it works.',
+    text: 'Good software isn’t just how it looks but how reliably it works.',
     signature: 'Dheeraj',
     cta: { label: 'Let’s build something reliable together', href: '#contact' },
   },
